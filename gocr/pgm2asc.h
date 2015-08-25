@@ -60,9 +60,7 @@ int merge_boxes( struct box *box1, struct box *box2 );
 int cut_box( struct box *box1);
   
 
-/* declared in database.c */
-int load_db(job_t *job);
-wchar_t ocr_db(struct box *box1, job_t *job);
+#include "database.h"
 
 /* declared in detect.c */
 int detect_lines1(pix * p, int x0, int y0, int dx, int dy);

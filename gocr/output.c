@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "pcx.h"
 #include "gocr.h"  /* extern job_t OCR_JOB; */
 #include "unicode_defs.h" /* UNKNOWN + PICTURE */
-
+#include "job.h"
 /* function is only for debugging and for developing
    it prints out a part of pixmap b at point x0,y0 to stderr
    using dots .,; if no pixel, and @xoO for pixels
@@ -205,7 +205,7 @@ int output_list(job_t *job) {
  *      4 - mark lines blue
  *      8 - reset coloring (remove old marker)
  */
-int debug_img(char *fname, struct job_s *job, int opt) {
+int debug_img(char *fname, job_t *job, int opt) {
   struct box *box2;
   int x, y, ic, dx, i, j, col;
   unsigned char *np;

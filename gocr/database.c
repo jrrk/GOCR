@@ -23,6 +23,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <stdlib.h>
 #include "gocr.h"
 #include "pnm.h"
+#include "database.h"
 #include "pgm2asc.h"
 #include "unicode_defs.h" /* macro UNKNOWN */
 #include <string.h>

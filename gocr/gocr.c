@@ -243,7 +243,7 @@ static void process_arguments(job_t *job, int argn, char *argv[])
   }
 }
 
-static void mark_start(job_t *job) {
+void mark_start(job_t *job) {
   assert(job);
 
   if (job->cfg.verbose) {
@@ -286,7 +286,7 @@ static void mark_start(job_t *job) {
   }
 }
 
-static void mark_end(job_t *job) {
+void mark_end(job_t *job) {
   assert(job);
 
 #ifdef HAVE_GETTIMEOFDAY
@@ -301,7 +301,7 @@ static void mark_end(job_t *job) {
 #endif
 }
 
-static int read_picture(job_t *job) {
+ int read_picture(job_t *job) {
   int rc=0;
   assert(job);
 
@@ -337,7 +337,9 @@ void print_output(job_t *job) {
 /* FIXME jb: remove JOB; renamed to OCR_JOB 2010-09-26 */
 job_t *OCR_JOB;
 
-
+void setCurrentJob(job_t* job){
+    OCR_JOB = job;
+}
 /* -------------------------------------------------------------
 // ------   MAIN - replace this by your own aplication! 
 // ------------------------------------------------------------- */

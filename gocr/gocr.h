@@ -35,7 +35,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #ifdef HAVE_GETTIMEOFDAY
 #include <sys/time.h>
 #endif
-
+#import <gocr/database.h>
+#import <gocr/job.h>
+#import <gocr/box.h>
+#import <gocr/pgm2asc.h>
 /*
  *  wchar_t should always exist (ANSI), but WCHAR.H is sometimes missing
  *  USE_UNICODE should be removed or replaced by HAVE_WCHAR_H in future
@@ -60,72 +63,6 @@ typedef enum direction DIRECTION;
 #define RIS 3    /* rising=steigend */
 #define FAL 4    /* falling=fallend */
 
-#define MAXlines 1024
-
-/* ToDo: if we have a tree instead of a list, a line could be a node object */
-struct tlines {
-    int num;
-    int dx, dy;		/* direction of text lines (straight/skew) */
-    int m1[MAXlines],   /* start of line = upper bound of 'A' */
-        m2[MAXlines],   /* upper bound of 'e' */
-        m3[MAXlines],	/* lower bound of 'e' = baseline */
-        m4[MAXlines];	/* stop of line = lower bound of 'q' */
-    /* ToDo: add sureness per m1,m2 etc? */
-    int x0[MAXlines],
-        x1[MAXlines];	/* left and right border */
-    int wt[MAXlines];   /* weight, how sure thats correct in percent, v0.41 */
-    int pitch[MAXlines]; /* word pitch (later per box?), v0.41 */
-    int mono[MAXlines];  /* spacing type, 0=proportional, 1=monospaced */
-};
-
-#define NumAlt 10 /* maximal number of alternative chars (table length) */
-#define MaxNumFrames 8       /* maximum number of frames per char/box */
-#define MaxFrameVectors 128  /* maximum vectors per frame (*8=1KB/box) */
-/* ToDo: use only malloc_box(),free_box(),copybox() for creation, destroy etc.
- *       adding reference_counter to avoid pointer pointing to freed box
- */
-struct box { /* this structure should contain all pixel infos of a letter */
-    int x0,x1,y0,y1,x,y,dots; /* xmin,xmax,ymin,ymax,reference-pixel,i-dots */
-    int num_boxes, /* 1 "abc", 2 "!i?", 3 "&auml;" (composed objects) 0.41 */
-        num_subboxes;   /* 1 for "abdegopqADOPQR", 2 for "B"  (holes) 0.41 */
-    wchar_t c;		/* detected char (same as tac[0], obsolete?) */
-    wchar_t modifier;	/* default=0, see compose() in unicode.c */
-    int num;		/* same number = same char */
-    int line;		/* line number (points to struct tlines lines) */
-    int m1,m2,m3,m4;	/* m2 = upper boundary, m3 = baseline */
-    /* planed: sizeof hole_1, hole_2, certainty (run1=100%,run2=90%,etc.) */
-    pix *p;		/* pointer to pixmap (v0.2.5) */
-    /* tac, wac is used together with setac() to manage very similar chars */
-    int num_ac;         /* length of table (alternative chars), default=0 */
-    wchar_t tac[NumAlt]; /* alternative chars, only used by setac(),getac() */
-    int     wac[NumAlt]; /* weight of alternative chars */
-    char   *tas[NumAlt]; /* alternative UTF8-strings or XML codes if tac[]=0 */
-                         /*   replacing old obj */
-	                 /* ToDo: (*obj)[NumAlt] + olen[NumAlt] ??? */
-	                 /* ToDo: bitmap for possible Picture|Object|Char ??? */
-/*  char    *obj; */     /* pointer to text-object ... -> replaced by tas[] */
-                         /*  ... (melted chars, barcode, picture coords, ...) */
-                         /*  must be freed before box is freed! */
-                         /*  do _not_ copy only the pointer to object */
-    /* --------------------------------------------------------
-     *  extension since v0.41 js05, Store frame vectors,
-     *  which is a table of vectors sourrounding the char and its
-     *  inner white holes. The advantage is the independence from
-     *  resolution, handling of holes, overlap and rotation.
-     * --------------------------------------------------------- */
-    int num_frames;      /* number of frames: 1 for cfhklmnrstuvwxyz */
-                         /*                   2 for abdegijopq */
-    int frame_vol[MaxNumFrames]; /* volume inside frame +/- (black/white) */
-    int frame_per[MaxNumFrames]; /* periphery, summed length of vectors */
-    int num_frame_vectors[MaxNumFrames]; /* index to next frame */
-                /* biggest frame should be stored first (outer frame) */
-                /* biggest has the maximum pair distance */
-                /* num vector loops */
-    int frame_vector[MaxFrameVectors][2]; /* may be 16*int=fixpoint_number */
-    
-};
-typedef struct box Box;
-
 /* true if the coordination pair (a,b) is outside the image p */
 #define outbounds(p, a, b)  (a < 0 || b < 0 || a >= (p)->x || b >= (p)->y)
 
@@ -139,66 +76,7 @@ typedef struct path {
   /* (if more values need to be stored, the arrays are enlarged) */
 } path_t;
 
-/* job_t contains all information needed for an OCR task */
-typedef struct job_s {
-  struct {       /* source data */
-    char *fname; /* input filename; default value: "-" */
-    pix p;       /* source pixel data, pixelmap 8bit gray */
-  } src;
-  struct { /* temporary stuff, e.g. buffers */
-#ifdef HAVE_GETTIMEOFDAY
-    struct timeval init_time; /* starting time of this job */
-#endif
-    pix ppo; /* pixmap for visual debugging output, obsolete */
 
-    /* sometimes recognition function is called again and again, if result was 0
-       n_run tells the pixel function to return alternative results */
-    int n_run;   /* num of run, if run_2 critical pattern get other results */
-                 /* used for 2nd try, pixel uses slower filter function etc. */
-    List dblist; /* list of boxes loaded from the character database */
-  } tmp;
-  struct {         /* results */
-    List boxlist;  /* store every object in a box, which contains */
-                   /* the characteristics of the object (see struct box) */
-    List linelist; /* recognized text lines after recognition */
-    
-    struct tlines lines; /* used to access to line-data (statistics) */
-                         /* here the positions (frames) of lines are */
-                         /* stored for further use */
-    int avX,avY;         /* average X,Y (avX=sumX/numC) */
-    int sumX,sumY,numC;  /* sum of all X,Y; num chars */
-  } res;
-  struct {    /* configuration */
-    int cs;   /* critical grey value (pixel<cs => black pixel) */
-              /* range: 0..255,  0 means autodetection */
-    int spc;  /* spacewidth/dots (0 = autodetect); default value: 0 */
-    int mode; /* operation modes; default value: 0 */
-              /* operation mode (see --help) */
-    int dust_size;    /* dust size; default value: 10 */
-    int only_numbers; /* numbers only; default value: 0 */
-    int verbose; /* verbose mode; default value: 0 */ 
-                 /* verbose option (see --help) */
-    FORMAT out_format; /* output format; default value: ISO8859_1 */
-    char *lc; /* debuglist of chars (_ = not recognized chars) */
-              /* default value: "_" */
-    char *db_path; /* pathname for database; default value: NULL */
-    char *cfilter; /* char filter; default value: NULL, ex: "A-Za-z" */
-        /* limit of certainty where chars are accepted as identified */
-    int  certainty; /* in units of 100 (percent); 0..100; default 95 */
-    char *unrec_marker; /* output this string for every unrecognized char */
-  } cfg;
-} job_t;
-
-/* initialze job structure */
-void job_init(job_t *job);        /* once for cfg and db */
-void job_init_image(job_t *job);  /* for each of a multiimage */
-
-/* free job structure */
-void job_free_image(job_t *job); /* for each of a multiimage */
-
-/* FIXME jb: remove JOB; 2010-09-25 renamed to OCR_JOB */
-/*  as a first step OCR_JOB will be remain in DO_DEBUG mode only */
-extern job_t *OCR_JOB;
 
 /* calculate the overlapp of the line (0-1) with black points 
  * by rekursiv bisection 
@@ -285,6 +163,10 @@ int distance(   pix *p1, struct box *box1,	/* box-frame */
 int getpixel(pix *p, int x, int y);
 int marked(pix *p, int  x, int  y);
 void put(pix * p, int x, int y, int ia, int io);
-
+void mark_start(job_t *job);
+void mark_end(job_t *job);
+int read_picture(job_t *job);
+void print_output(job_t *job);
+void setCurrentJob(job_t *job);
 /* } */ /* extern C */
 #endif /* __GOCR_H__ */

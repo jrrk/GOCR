@@ -31,7 +31,7 @@ void out_b(struct box *px, pix *b, int x0, int y0, int dx, int dy, int cs );
 void out_x(struct box *px);
 void out_x2(struct box *box1,struct box *box2);
 int output_list(job_t *job);
-int debug_img(char *fname, struct job_s *job, int opt);
+int debug_img(char *fname, job_t *job, int opt);
 
 
 #endif

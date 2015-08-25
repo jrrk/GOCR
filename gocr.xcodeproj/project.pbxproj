@@ -41,12 +41,16 @@
 		46D3B22A1B8CF32E00729D87 /* lines.c in Sources */ = {isa = PBXBuildFile; fileRef = 46D3B2231B8CF32E00729D87 /* lines.c */; settings = {ASSET_TAGS = (); }; };
 		46D3B22B1B8CF32E00729D87 /* list.c in Sources */ = {isa = PBXBuildFile; fileRef = 46D3B2241B8CF32E00729D87 /* list.c */; settings = {ASSET_TAGS = (); }; };
 		46D3B22C1B8CF32E00729D87 /* list.h in Headers */ = {isa = PBXBuildFile; fileRef = 46D3B2251B8CF32E00729D87 /* list.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		46D3B2331B8CF33300729D87 /* amiga.h in Headers */ = {isa = PBXBuildFile; fileRef = 46D3B22D1B8CF33300729D87 /* amiga.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		46D3B2331B8CF33300729D87 /* amiga.h in Headers */ = {isa = PBXBuildFile; fileRef = 46D3B22D1B8CF33300729D87 /* amiga.h */; };
 		46D3B2341B8CF33300729D87 /* barcode.c in Sources */ = {isa = PBXBuildFile; fileRef = 46D3B22E1B8CF33300729D87 /* barcode.c */; settings = {ASSET_TAGS = (); }; };
 		46D3B2351B8CF33300729D87 /* barcode.h in Headers */ = {isa = PBXBuildFile; fileRef = 46D3B22F1B8CF33300729D87 /* barcode.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		46D3B2361B8CF33300729D87 /* box.c in Sources */ = {isa = PBXBuildFile; fileRef = 46D3B2301B8CF33300729D87 /* box.c */; settings = {ASSET_TAGS = (); }; };
 		46D3B2371B8CF33300729D87 /* database.c in Sources */ = {isa = PBXBuildFile; fileRef = 46D3B2311B8CF33300729D87 /* database.c */; settings = {ASSET_TAGS = (); }; };
 		46D3B2381B8CF33300729D87 /* detect.c in Sources */ = {isa = PBXBuildFile; fileRef = 46D3B2321B8CF33300729D87 /* detect.c */; settings = {ASSET_TAGS = (); }; };
+		46D3B2841B8D00E000729D87 /* database.h in Headers */ = {isa = PBXBuildFile; fileRef = 46D3B2801B8CFE6500729D87 /* database.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		46D3B2851B8D00E400729D87 /* job.h in Headers */ = {isa = PBXBuildFile; fileRef = 46D3B2811B8CFEFB00729D87 /* job.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		46D3B2861B8D00E900729D87 /* box.h in Headers */ = {isa = PBXBuildFile; fileRef = 46D3B2821B8CFF7800729D87 /* box.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		46D3B2871B8D00FD00729D87 /* lines.h in Headers */ = {isa = PBXBuildFile; fileRef = 46D3B2831B8D003400729D87 /* lines.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -103,6 +107,10 @@
 		46D3B2301B8CF33300729D87 /* box.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = box.c; sourceTree = "<group>"; };
 		46D3B2311B8CF33300729D87 /* database.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = database.c; sourceTree = "<group>"; };
 		46D3B2321B8CF33300729D87 /* detect.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = detect.c; sourceTree = "<group>"; };
+		46D3B2801B8CFE6500729D87 /* database.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = database.h; sourceTree = "<group>"; };
+		46D3B2811B8CFEFB00729D87 /* job.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = job.h; sourceTree = "<group>"; };
+		46D3B2821B8CFF7800729D87 /* box.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = box.h; sourceTree = "<group>"; };
+		46D3B2831B8D003400729D87 /* lines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = lines.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,15 +153,19 @@
 		46D3B1D11B8CF2DD00729D87 /* gocr */ = {
 			isa = PBXGroup;
 			children = (
+				46D3B2201B8CF32E00729D87 /* gocr.h */,
 				46D3B21F1B8CF32E00729D87 /* gocr.c */,
 				46D3B22D1B8CF33300729D87 /* amiga.h */,
 				46D3B22E1B8CF33300729D87 /* barcode.c */,
 				46D3B22F1B8CF33300729D87 /* barcode.h */,
+				46D3B2821B8CFF7800729D87 /* box.h */,
 				46D3B2301B8CF33300729D87 /* box.c */,
+				46D3B2801B8CFE6500729D87 /* database.h */,
 				46D3B2311B8CF33300729D87 /* database.c */,
 				46D3B2321B8CF33300729D87 /* detect.c */,
-				46D3B2201B8CF32E00729D87 /* gocr.h */,
+				46D3B2811B8CFEFB00729D87 /* job.h */,
 				46D3B2221B8CF32E00729D87 /* job.c */,
+				46D3B2831B8D003400729D87 /* lines.h */,
 				46D3B2231B8CF32E00729D87 /* lines.c */,
 				46D3B2241B8CF32E00729D87 /* list.c */,
 				46D3B2251B8CF32E00729D87 /* list.h */,
@@ -204,6 +216,10 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				46D3B2851B8D00E400729D87 /* job.h in Headers */,
+				46D3B2871B8D00FD00729D87 /* lines.h in Headers */,
+				46D3B2861B8D00E900729D87 /* box.h in Headers */,
+				46D3B2841B8D00E000729D87 /* database.h in Headers */,
 				46D3B21C1B8CF32800729D87 /* unicode_defs.h in Headers */,
 				46D3B21B1B8CF32800729D87 /* tga.h in Headers */,
 				46D3B2111B8CF32800729D87 /* pcx.h in Headers */,
@@ -217,10 +233,10 @@
 				46D3B20B1B8CF32800729D87 /* ocr1.h in Headers */,
 				46D3B22C1B8CF32E00729D87 /* list.h in Headers */,
 				46D3B2161B8CF32800729D87 /* pnm.h in Headers */,
-				46D3B2331B8CF33300729D87 /* amiga.h in Headers */,
 				46D3B2181B8CF32800729D87 /* progress.h in Headers */,
 				46D3B1EE1B8CF2F300729D87 /* version.h in Headers */,
 				46D3B2081B8CF32800729D87 /* ocr0.h in Headers */,
+				46D3B2331B8CF33300729D87 /* amiga.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -523,6 +539,7 @@
 				46D3B1E51B8CF2DD00729D87 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		46D3B1E61B8CF2DD00729D87 /* Build configuration list for PBXNativeTarget "gocrTests" */ = {
 			isa = XCConfigurationList;
@@ -531,6 +548,7 @@
 				46D3B1E81B8CF2DD00729D87 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
