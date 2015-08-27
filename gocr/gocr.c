@@ -119,129 +119,129 @@ static int timeval_subtract (struct timeval *result, struct timeval *x,
 }
 #endif
 
-static void process_arguments(job_t *job, int argn, char *argv[])
-{
-  int i;
-  char *s1;
-
-  assert(job);
-
-  if (argn <= 1) {
-    out_version(1);
-    exit(0);
-  }
-#ifdef HAVE_PGM_H
-  pnm_init(&argn, &argv);
-#endif
-  
-  /* process arguments */
-  for (i = 1; i < argn; i++) {
-    if (strcmp(argv[i], "--help") == 0)
-      help(); /* and quits */
-    if (argv[i][0] == '-' && argv[i][1] != 0) {
-      s1 = "";
-      if (i + 1 < argn)
-	s1 = argv[i + 1];
-      switch (argv[i][1]) {
-      case 'h': /* help */
-	help();
-	break;
-      case 'i': /* input image file */
-	job->src.fname = s1;
-	i++;
-	break;
-      case 'e': /* logging file */
-	if (s1[0] == '-' && s1[1] == '\0') {
-#ifdef HAVE_UNISTD_H
-          dup2(STDOUT_FILENO, STDERR_FILENO); /* -e /dev/stdout  works */
-#else
-	  fprintf(stderr, "stderr redirection not possible without unistd.h\n");
-#endif           
-	}
-	else if (!freopen(s1, "w", stderr)) {
-	  fprintf(stderr, "stderr redirection to %s failed\n", s1);
-	}
-	i++;
-	break;
-      case 'p': /* database path */
-	job->cfg.db_path=s1;
-	i++;
-	break;
-      case 'o': /* output file */
-	if (s1[0] == '-' && s1[1] == '\0') {	/* default */
-	}
-	else if (!freopen(s1, "w", stdout)) {
-	  fprintf(stderr, "stdout redirection to %s failed\n", s1);
-	};
-	i++;
-	break;
-      case 'f': /* output format */
-        if (strcmp(s1, "ISO8859_1") == 0) job->cfg.out_format=ISO8859_1; else
-        if (strcmp(s1, "TeX")       == 0) job->cfg.out_format=TeX; else
-        if (strcmp(s1, "HTML")      == 0) job->cfg.out_format=HTML; else
-        if (strcmp(s1, "XML")       == 0) job->cfg.out_format=XML; else
-        if (strcmp(s1, "SGML")      == 0) job->cfg.out_format=SGML; else
-        if (strcmp(s1, "UTF8")      == 0) job->cfg.out_format=UTF8; else
-        if (strcmp(s1, "ASCII")     == 0) job->cfg.out_format=ASCII; else
-        fprintf(stderr,"Warning: unknown format (-f %s)\n",s1);
-        i++;
-        break;
-      case 'c': /* list of chars (_ = not recognized chars) */
-	job->cfg.lc = s1;
-	i++;
-	break;
-      case 'C': /* char filter, default: NULL (all chars) */
-        /* ToDo: UTF8 input, wchar */
-	job->cfg.cfilter = s1;
-	i++;
-	break;
-      case 'd': /* dust size */
-	job->cfg.dust_size = atoi(s1);
-	i++;
-	break;
-      case 'l': /* grey level 0<160<=255, 0 for autodetect */
-	job->cfg.cs = atoi(s1);
-	i++;
-	break;
-      case 's': /* spacewidth/dots (0 = autodetect) */
-	job->cfg.spc = atoi(s1);
-	i++;
-	break;
-      case 'v': /* verbose mode */
-	job->cfg.verbose |= atoi(s1);
-	i++;
-	break;
-      case 'm': /* operation modes */
-	job->cfg.mode |= atoi(s1);
-	i++;
-	break;
-      case 'n': /* numbers only */
-	job->cfg.only_numbers = atoi(s1);
-	i++;
-	break;
-      case 'x': /* initialize progress output s1=fname */
-	ini_progress(s1);
-	i++;
-	break;
-      case 'a': /* set certainty */
-	job->cfg.certainty = atoi(s1);;
-	i++;
-	break;
-      case 'u': /* output marker for unrecognized chars */
-        job->cfg.unrec_marker = s1;
-        i++;
-        break;
-      default:
-	fprintf(stderr, "# unknown option use -h for help\n");
-      }
-      continue;
-    }
-    else /* argument can be filename v0.2.5 */ if (argv[i][0] != '-'
-						   || argv[i][1] == '\0' ) {
-      job->src.fname = argv[i];
-    }
-  }
-}
+//static void process_arguments(job_t *job, int argn, char *argv[])
+//{
+//  int i;
+//  char *s1;
+//
+//  assert(job);
+//
+//  if (argn <= 1) {
+//    out_version(1);
+//    exit(0);
+//  }
+//#ifdef HAVE_PGM_H
+//  pnm_init(&argn, &argv);
+//#endif
+//  
+//  /* process arguments */
+//  for (i = 1; i < argn; i++) {
+//    if (strcmp(argv[i], "--help") == 0)
+//      help(); /* and quits */
+//    if (argv[i][0] == '-' && argv[i][1] != 0) {
+//      s1 = "";
+//      if (i + 1 < argn)
+//	s1 = argv[i + 1];
+//      switch (argv[i][1]) {
+//      case 'h': /* help */
+//	help();
+//	break;
+//      case 'i': /* input image file */
+//	job->src.fname = s1;
+//	i++;
+//	break;
+//      case 'e': /* logging file */
+//	if (s1[0] == '-' && s1[1] == '\0') {
+//#ifdef HAVE_UNISTD_H
+//          dup2(STDOUT_FILENO, STDERR_FILENO); /* -e /dev/stdout  works */
+//#else
+//	  fprintf(stderr, "stderr redirection not possible without unistd.h\n");
+//#endif           
+//	}
+//	else if (!freopen(s1, "w", stderr)) {
+//	  fprintf(stderr, "stderr redirection to %s failed\n", s1);
+//	}
+//	i++;
+//	break;
+//      case 'p': /* database path */
+//	job->cfg.db_path=s1;
+//	i++;
+//	break;
+//      case 'o': /* output file */
+//	if (s1[0] == '-' && s1[1] == '\0') {	/* default */
+//	}
+//	else if (!freopen(s1, "w", stdout)) {
+//	  fprintf(stderr, "stdout redirection to %s failed\n", s1);
+//	};
+//	i++;
+//	break;
+//      case 'f': /* output format */
+//        if (strcmp(s1, "ISO8859_1") == 0) job->cfg.out_format=ISO8859_1; else
+//        if (strcmp(s1, "TeX")       == 0) job->cfg.out_format=TeX; else
+//        if (strcmp(s1, "HTML")      == 0) job->cfg.out_format=HTML; else
+//        if (strcmp(s1, "XML")       == 0) job->cfg.out_format=XML; else
+//        if (strcmp(s1, "SGML")      == 0) job->cfg.out_format=SGML; else
+//        if (strcmp(s1, "UTF8")      == 0) job->cfg.out_format=UTF8; else
+//        if (strcmp(s1, "ASCII")     == 0) job->cfg.out_format=ASCII; else
+//        fprintf(stderr,"Warning: unknown format (-f %s)\n",s1);
+//        i++;
+//        break;
+//      case 'c': /* list of chars (_ = not recognized chars) */
+//	job->cfg.lc = s1;
+//	i++;
+//	break;
+//      case 'C': /* char filter, default: NULL (all chars) */
+//        /* ToDo: UTF8 input, wchar */
+//	job->cfg.cfilter = s1;
+//	i++;
+//	break;
+//      case 'd': /* dust size */
+//	job->cfg.dust_size = atoi(s1);
+//	i++;
+//	break;
+//      case 'l': /* grey level 0<160<=255, 0 for autodetect */
+//	job->cfg.cs = atoi(s1);
+//	i++;
+//	break;
+//      case 's': /* spacewidth/dots (0 = autodetect) */
+//	job->cfg.spc = atoi(s1);
+//	i++;
+//	break;
+//      case 'v': /* verbose mode */
+//	job->cfg.verbose |= atoi(s1);
+//	i++;
+//	break;
+//      case 'm': /* operation modes */
+//	job->cfg.mode |= atoi(s1);
+//	i++;
+//	break;
+//      case 'n': /* numbers only */
+//	job->cfg.only_numbers = atoi(s1);
+//	i++;
+//	break;
+//      case 'x': /* initialize progress output s1=fname */
+//	ini_progress(s1);
+//	i++;
+//	break;
+//      case 'a': /* set certainty */
+//	job->cfg.certainty = atoi(s1);;
+//	i++;
+//	break;
+//      case 'u': /* output marker for unrecognized chars */
+//        job->cfg.unrec_marker = s1;
+//        i++;
+//        break;
+//      default:
+//	fprintf(stderr, "# unknown option use -h for help\n");
+//      }
+//      continue;
+//    }
+//    else /* argument can be filename v0.2.5 */ if (argv[i][0] != '-'
+//						   || argv[i][1] == '\0' ) {
+//      job->src.fname = argv[i];
+//    }
+//  }
+//}
 
 void mark_start(job_t *job) {
   assert(job);
