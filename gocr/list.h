@@ -24,11 +24,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #define GOCR_LIST_H
 
 /* ./configure --with-debug ??? DO_DEBUG? */
-#ifdef DEBUG
-#define g_debug(a)	a
-#else
+//#ifdef DEBUG
+//#define g_debug(a)	a
+//#else
 #define g_debug(a)	
-#endif
+//#endif
 
 /*
  * Structures
